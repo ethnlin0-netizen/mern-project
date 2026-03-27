@@ -1,8 +1,10 @@
-import Login from '../components/Login'
+import Login from '../components/Login.tsx'
+import PageTitle from '../components/PageTitle.tsx'
 
-function LoginPage() {
+const LoginPage = () => {
   return (
     <div>
+      <PageTitle />
       <Login />
     </div>
   )
