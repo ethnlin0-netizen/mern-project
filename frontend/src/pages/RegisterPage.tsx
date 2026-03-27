@@ -1,8 +1,10 @@
-import Register from '../components/Register'
+import Register from '../components/Register.tsx'
+import PageTitle from '../components/PageTitle.tsx'
 
-function RegisterPage() {
+const RegisterPage = () => {
   return (
     <div>
+      <PageTitle />
       <Register />
     </div>
   )
