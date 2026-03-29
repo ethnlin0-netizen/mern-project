@@ -20,7 +20,8 @@ function Register() {
       <input type="text" placeholder="Login" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLogin(e.target.value)} /><br />
       <input type="password" placeholder="Password" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} /><br />
       <input type="submit" value="Register" onClick={handleSubmit} />
-      <span>{message}</span>
+      <span>{message}</span><br />
+      <span>Already have an account? <a href="/login">Login</a></span>
     </div>
   )
 }
