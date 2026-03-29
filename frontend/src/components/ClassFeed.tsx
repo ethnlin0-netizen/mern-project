@@ -1,3 +1,5 @@
+import ResourceCard from './ResourceCard.tsx'
+
 function ClassFeed() {
   function postResource(event: any): void {
     event.preventDefault()

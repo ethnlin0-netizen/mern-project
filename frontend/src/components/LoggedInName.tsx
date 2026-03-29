@@ -1,7 +1,14 @@
+import { useAuth } from '../context/AuthContext.tsx'
+import { useNavigate } from 'react-router-dom'
+
 function LoggedInName() {
+  const auth = useAuth()
+  const navigate = useNavigate()
+
   function doLogout(event: any): void {
     event.preventDefault()
-    alert('doLogout')
+    auth?.logout()
+    navigate('/login')
   }
 
   return (
