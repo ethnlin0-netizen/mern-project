@@ -3,7 +3,6 @@ import LoginPage from './pages/LoginPage.tsx'
 import RegisterPage from './pages/RegisterPage.tsx'
 import DashboardPage from './pages/DashboardPage.tsx'
 import ClassFeedPage from './pages/ClassFeedPage.tsx'
-import HomePage from './pages/HomePage.tsx'
 import VerifyEmailPage from './pages/VerifyEmailPage.tsx'
 import ForgotPasswordPage from './pages/ForgotPasswordPage.tsx'
 import ResetPasswordPage from './pages/ResetPasswordPage.tsx'
@@ -15,7 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
