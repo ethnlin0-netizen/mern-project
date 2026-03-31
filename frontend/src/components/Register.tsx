@@ -8,7 +8,7 @@ function Register() {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
 
-  function handleSubmit(event: React.MouseEvent<HTMLInputElement>): void {
+  async function handleSubmit(event: React.MouseEvent<HTMLInputElement>): Promise<void> {
     event.preventDefault()
     if (password.length < 8) {
       setMessage('Password must be at least 8 characters!')
@@ -20,7 +20,27 @@ function Register() {
       return
     }
 
-    alert('Register: ' + firstName + ' ' + lastName + ' ' + login)
+    try {
+    const response = await fetch('http://localhost:5001/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        FirstName: firstName, 
+        LastName: lastName, 
+        Email: email,
+        Login: login, 
+        Password: password 
+      })
+    })
+    const data = await response.json()
+    if (response.ok) {
+      setMessage('Registration successful! Please check your email to verify your account.')
+    } else {
+      setMessage(data.message)
+    }
+  } catch (error) {
+    setMessage('Server error, please try again')
+  }
   }
 
   return (
