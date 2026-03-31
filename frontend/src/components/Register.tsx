@@ -8,9 +8,39 @@ function Register() {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
 
-  function handleSubmit(event: React.MouseEvent<HTMLInputElement>): void {
+  async function handleSubmit(event: React.MouseEvent<HTMLInputElement>): Promise<void> {
     event.preventDefault()
-    alert('Register: ' + firstName + ' ' + lastName + ' ' + login)
+    if (password.length < 8) {
+      setMessage('Password must be at least 8 characters!')
+      return
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      setMessage('Password must contain at least one uppercase letter!')
+      return
+    }
+
+    try {
+    const response = await fetch('http://localhost:5001/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        FirstName: firstName, 
+        LastName: lastName, 
+        Email: email,
+        Login: login, 
+        Password: password 
+      })
+    })
+    const data = await response.json()
+    if (response.ok) {
+      setMessage('Registration successful! Please check your email to verify your account.')
+    } else {
+      setMessage(data.message)
+    }
+  } catch (error) {
+    setMessage('Server error, please try again')
+  }
   }
 
   return (
@@ -22,6 +52,7 @@ function Register() {
       <input type="text" placeholder="Login" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLogin(e.target.value)} /><br />
       <input type="password" placeholder="Password" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} /><br />
       <input type="submit" value="Register" onClick={handleSubmit} />
+      <br />
       <span>{message}</span><br />
       <span>Already have an account? <a href="/login">Login</a></span>
     </div>
