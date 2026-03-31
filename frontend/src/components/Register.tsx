@@ -10,6 +10,16 @@ function Register() {
 
   function handleSubmit(event: React.MouseEvent<HTMLInputElement>): void {
     event.preventDefault()
+    if (password.length < 8) {
+      setMessage('Password must be at least 8 characters')
+      return
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      setMessage('Password must contain at least one uppercase letter')
+      return
+    }
+
     alert('Register: ' + firstName + ' ' + lastName + ' ' + login)
   }
 
