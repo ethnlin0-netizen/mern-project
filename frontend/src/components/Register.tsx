@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Register() {
   const [firstName, setFirstName] = useState('')
@@ -7,40 +8,49 @@ function Register() {
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+  const navigate = useNavigate()
 
   async function handleSubmit(event: React.MouseEvent<HTMLInputElement>): Promise<void> {
     event.preventDefault()
+
     if (password.length < 8) {
-      setMessage('Password must be at least 8 characters!')
+      setMessage('Password must be at least 8 characters')
       return
     }
-    
     if (!/[A-Z]/.test(password)) {
-      setMessage('Password must contain at least one uppercase letter!')
+      setMessage('Password must contain at least one uppercase letter')
+      return
+    }
+    if (!/[0-9]/.test(password)) {
+      setMessage('Password must contain at least one number')
+      return
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      setMessage('Password must contain at least one special character')
       return
     }
 
     try {
-    const response = await fetch('http://localhost:5001/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        FirstName: firstName, 
-        LastName: lastName, 
-        Email: email,
-        Login: login, 
-        Password: password 
+      const response = await fetch('http://localhost:5001/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          FirstName: firstName,
+          LastName: lastName,
+          Email: email,
+          Login: login,
+          Password: password
+        })
       })
-    })
-    const data = await response.json()
-    if (response.ok) {
-      setMessage('Registration successful! Please check your email to verify your account.')
-    } else {
-      setMessage(data.message)
+      const data = await response.json()
+      if (response.ok) {
+        setMessage('Registration successful! Please check your email to verify your account.')
+      } else {
+        setMessage(data.message)
+      }
+    } catch (error) {
+      setMessage('Server error, please try again')
     }
-  } catch (error) {
-    setMessage('Server error, please try again')
-  }
   }
 
   return (

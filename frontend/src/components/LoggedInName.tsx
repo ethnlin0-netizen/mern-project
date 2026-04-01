@@ -13,7 +13,7 @@ function LoggedInName() {
 
   return (
     <div id="loggedInDiv">
-      <span id="userName">Logged In As John Doe</span><br />
+      <span id="userName">Logged In As {auth?.username}</span><br />
       <button type="button" onClick={doLogout}>Log Out</button>
     </div>
   )
