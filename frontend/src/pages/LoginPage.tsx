@@ -3,7 +3,10 @@ import PageTitle from '../components/PageTitle.tsx'
 
 const LoginPage = () => {
   return (
-    <div>
+    <div style={{ 
+      backgroundColor: '#43281c', 
+      minHeight: '100vh'
+    }}>
       <PageTitle />
       <Login />
     </div>
