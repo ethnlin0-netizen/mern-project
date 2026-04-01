@@ -9,24 +9,24 @@ function Login() {
   const auth = useAuth()
   const navigate = useNavigate()
 
-  async function handleSubmit(event: React.MouseEvent): Promise<void> {
-  event.preventDefault()
-  try {
-    const response = await fetch('http://localhost:5001/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Login: login, Password: password })
-    })
-    const data = await response.json()
-    if (response.ok) {
-      auth?.login(data.token, data.token)
-      navigate('/dashboard')
-    } else {
-      setMessage(data.message)
+  async function handleSubmit(event: React.MouseEvent<HTMLInputElement>): Promise<void> {
+    event.preventDefault()
+    try {
+      const response = await fetch('http://localhost:5001/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ Login: login, Password: password })
+      })
+      const data = await response.json()
+      if (response.ok) {
+        auth?.login(data.token, data.token, login)
+        navigate('/dashboard')
+      } else {
+        setMessage(data.message)
+      }
+    } catch (error) {
+      setMessage('Server error, please try again')
     }
-  } catch (error) {
-    setMessage('Server error, please try again')
-  }
   }
 
   return (
