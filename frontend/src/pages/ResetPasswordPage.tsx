@@ -3,7 +3,10 @@ import ResetPassword from '../components/ResetPassword.tsx'
 
 const ResetPasswordPage = () => {
   return (
-    <div>
+    <div style={{ 
+      backgroundColor: '#43281c', 
+      minHeight: '100vh'
+    }}>
       <PageTitle />
       <ResetPassword />
     </div>

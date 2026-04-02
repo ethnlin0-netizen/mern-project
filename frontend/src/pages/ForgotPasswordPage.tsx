@@ -3,7 +3,10 @@ import ForgotPassword from '../components/ForgotPassword.tsx'
 
 const ForgotPasswordPage = () => {
   return (
-    <div>
+    <div style={{ 
+      backgroundColor: '#43281c', 
+      minHeight: '100vh'
+    }}>
       <PageTitle />
       <ForgotPassword />
     </div>
