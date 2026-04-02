@@ -119,19 +119,10 @@ function Dashboard() {
   return (
     <div className="container-fluid" style={{ backgroundColor: '#43281c', minHeight: '100vh' }}>
       <div className="container py-4">
-        /* Welcome Section */
-        <div className="text-center mb-5">
-          <h2 style={{ color: '#fbf2c0' }}>
-            Welcome, {username}!
-          </h2>
-          <p style={{ color: '#fbf2c0', opacity: 0.8 }}>
-            Manage your study groups and classes
-          </p>
-        </div>
 
         <div className="row justify-content-center">
           <div className="col-12 col-lg-10">
-            /* Search Class Section */
+  
             <div className="card mb-4" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',
@@ -188,7 +179,6 @@ function Dashboard() {
               </div>
             </div>
 
-            /* Join Class Section */
             <div className="card mb-4" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',
@@ -245,7 +235,7 @@ function Dashboard() {
               </div>
             </div>
 
-            /* Create Class Section */
+ 
             <div className="card mb-4" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',
@@ -302,7 +292,7 @@ function Dashboard() {
               </div>
             </div>
 
-            /* Your Classes List */
+
             <div className="card" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',

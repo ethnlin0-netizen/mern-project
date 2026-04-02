@@ -46,7 +46,7 @@ function Register() {
       if (response.ok) {
         setMessage('Registration successful! Please check your email to verify your account.')
         setMessageType('success')
-        // Optional: redirect to login after 3 seconds
+        // Redirect to login after 3 seconds
         setTimeout(() => {
           navigate('/login')
         }, 3000)
