@@ -56,4 +56,27 @@ const getClass = async (req, res) => {
     }
 };
 
-module.exports = { createClass, joinClass, getClass };
+const getMyClasses = async (req, res) => {
+    try {
+        const myClasses = await Class.find({ members: req.user.Userid });
+        res.status(200).json(myClasses);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+const searchClasses = async (req, res) => {
+    const { query } = req.query;
+
+    try {
+        if (!query) {
+            return res.status(400).json({ message: "Query parameter is required" });
+        }
+        const classes = await Class.find({ className: { $regex: query, $options: "i" } });
+        res.status(200).json(classes);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+module.exports = { createClass, joinClass, getClass, getMyClasses, searchClasses };
