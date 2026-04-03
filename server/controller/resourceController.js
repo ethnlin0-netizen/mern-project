@@ -20,13 +20,33 @@ const createResource = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-
+/*
 const getResourcesByClass = async (req, res) => {
     try {
         const resources = await Resource.find({ classID: req.params.classID });
         res.status(200).json(resources);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+*/
+
+const getResourcesByClass = async (req, res) => {
+    try {
+        const foundClass = await Class.findById(req.params.classID);
+        if (!foundClass) {
+            return res.status(404).json({ message: "Class not found" });
+        }
+
+        if(!foundClass.members.includes(req.user.Userid)) {
+            return res.status(403).json({ message: "Access denied" });
+        }
+
+        const resources = await Resource.find({ classID: req.params.classID });
+        res.status(200).json(resources);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+
     }
 };
 
