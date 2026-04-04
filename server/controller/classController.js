@@ -1,20 +1,13 @@
 const Class = require("../models/Class");
 
 const createClass = async (req, res) => {
-    const { className, owner } = req.body;
+    const { className } = req.body;
+    const owner = req.user.userId.toString(); // from token, not req.body
 
     try {
         const joinCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-
-        const newClass = new Class({
-            className,
-            joinCode,
-            members: [owner],
-            owner,
-        });
-
+        const newClass = new Class({ className, joinCode, members: [owner], owner });
         await newClass.save();
-
         res.status(201).json({ message: "Class created", class: newClass });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
@@ -22,7 +15,8 @@ const createClass = async (req, res) => {
 };
 
 const joinClass = async (req, res) => {
-    const { joinCode, userId } = req.body;
+    const { joinCode } = req.body;
+    const userId = req.user.userId.toString();
 
     try {
         const foundClass = await Class.findOne({ joinCode });
@@ -30,7 +24,7 @@ const joinClass = async (req, res) => {
             return res.status(404).json({ message: "Class not found" });
         }
 
-        if (foundClass.members.includes(userId)) {
+        if (foundClass.owner == userId || foundClass.members.includes(userId)) {
             return res.status(400).json({ message: "Already a member" });
         }
 
@@ -58,7 +52,7 @@ const getClass = async (req, res) => {
 
 const getMyClasses = async (req, res) => {
     try {
-        const myClasses = await Class.find({ members: req.user.Userid });
+        const myClasses = await Class.find({ members: req.user.userId.toString() });
         res.status(200).json(myClasses);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
