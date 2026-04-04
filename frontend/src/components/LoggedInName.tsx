@@ -1,20 +1,35 @@
 import { useAuth } from '../context/AuthContext.tsx'
-import { useNavigate } from 'react-router-dom'
 
 function LoggedInName() {
   const auth = useAuth()
-  const navigate = useNavigate()
 
-  function doLogout(event: any): void {
-    event.preventDefault()
+  const handleLogout = () => {
     auth?.logout()
-    navigate('/login')
+    window.location.href = '/login'
   }
 
   return (
-    <div id="loggedInDiv">
-      <span id="userName">Logged In As {auth?.username}</span><br />
-      <button type="button" onClick={doLogout}>Log Out</button>
+    <div className="container-fluid" style={{ backgroundColor: '#43281c', borderBottom: '1px solid #000' }}>
+      <div className="container text-center py-3">
+        <div style={{ color: '#fbf2c0', marginBottom: '12px' }}>
+          Welcome, <strong>{auth?.username || 'Student'}</strong>!
+        </div>
+        <button
+        onClick={handleLogout}
+        className="btn"
+        style={{
+          backgroundColor: 'rgba(67, 40, 28, 0.67)',
+          color: '#fbf2c0',
+          border: '1px solid #000',
+          padding: '8px 24px',  
+          fontSize: '1rem',      
+          width: 'auto',
+          minWidth: '120px'     
+        }}
+      >
+        Logout
+      </button>
+      </div>
     </div>
   )
 }

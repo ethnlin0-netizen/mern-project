@@ -26,10 +26,17 @@ function Dashboard() {
 
   const fetchUserClasses = async () => {
     if (!userId) return
-    
+  
     try {
-      // Need endpoint to get classes by user
-      setMyClasses([])
+      const response = await fetch('http://localhost:5001/api/classes/user/me', {
+        headers: { 
+          'Authorization': `Bearer ${auth?.token}` 
+        }
+      })
+      const data = await response.json()
+      if (response.ok) {
+        setMyClasses(data)
+      }
     } catch (error) {
       console.error('Error fetching classes:', error)
     }
@@ -47,7 +54,10 @@ function Dashboard() {
     try {
       const response = await fetch('http://localhost:5001/api/classes/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth?.token}` 
+        },
         body: JSON.stringify({ className, owner: userId })
       })
       const data = await response.json()
@@ -79,10 +89,13 @@ function Dashboard() {
     setIsLoading(true)
     try {
       const response = await fetch('http://localhost:5001/api/classes/join', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ joinCode, userId })
-      })
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth?.token}`
+      },
+      body: JSON.stringify({ joinCode, userId })
+    })
       const data = await response.json()
       if (response.ok) {
         setJoinResult(`✓ Successfully joined class "${data.class.className}"`)
@@ -108,8 +121,21 @@ function Dashboard() {
       setMessageType('error')
       return
     }
-    setSearchResult('🔍 Search coming soon...')
-    setMessageType('success')
+    try {
+      const response = await fetch(`http://localhost:5001/api/classes/search?query=${encodeURIComponent(searchText)}`, {
+        headers: { 
+          'Authorization': `Bearer ${auth?.token}` 
+        }
+      })
+      const data = await response.json()
+      if (response.ok) {
+        setSearchResult(`Found ${data.length} classes matching "${searchText}"`)
+        setMessageType('success')
+      }
+    } catch (error) {
+      setSearchResult('Search failed, please try again')
+      setMessageType('error')
+    }
   }
 
   const navigateToClass = (classId: string) => {
@@ -119,26 +145,17 @@ function Dashboard() {
   return (
     <div className="container-fluid" style={{ backgroundColor: '#43281c', minHeight: '100vh' }}>
       <div className="container py-4">
-        /* Welcome Section */
-        <div className="text-center mb-5">
-          <h2 style={{ color: '#fbf2c0' }}>
-            Welcome, {username}!
-          </h2>
-          <p style={{ color: '#fbf2c0', opacity: 0.8 }}>
-            Manage your study groups and classes
-          </p>
-        </div>
 
         <div className="row justify-content-center">
           <div className="col-12 col-lg-10">
-            /* Search Class Section */
+  
             <div className="card mb-4" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',
               borderRadius: '12px'
             }}>
               <div className="card-body p-4">
-                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>🔍 Search Classes</h3>
+                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Search Classes</h3>
                 <div className="row g-3">
                   <div className="col-md-8">
                     <input
@@ -188,14 +205,13 @@ function Dashboard() {
               </div>
             </div>
 
-            /* Join Class Section */
             <div className="card mb-4" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',
               borderRadius: '12px'
             }}>
               <div className="card-body p-4">
-                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>🔗 Join a Class</h3>
+                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Join a Class</h3>
                 <div className="row g-3">
                   <div className="col-md-8">
                     <input
@@ -245,14 +261,14 @@ function Dashboard() {
               </div>
             </div>
 
-            /* Create Class Section */
+ 
             <div className="card mb-4" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',
               borderRadius: '12px'
             }}>
               <div className="card-body p-4">
-                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>✨ Create a Class</h3>
+                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Create a Class</h3>
                 <div className="row g-3">
                   <div className="col-md-8">
                     <input
@@ -302,14 +318,14 @@ function Dashboard() {
               </div>
             </div>
 
-            /* Your Classes List */
+
             <div className="card" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',
               borderRadius: '12px'
             }}>
               <div className="card-body p-4">
-                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>📚 Your Classes</h3>
+                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Your Classes</h3>
                 {myClasses.length > 0 ? (
                   <div className="row g-3">
                     {myClasses.map((classItem) => (
