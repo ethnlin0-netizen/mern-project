@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendVerificationEmail = async (email, token) => {
-    const verificationLink = `http://localhost:5173/verify-email/${token}`;
+    const verificationLink = `http://localhost:5173/verify-email/${token}?email=${email}`;
     //backend link should be replaced with frontend link when frontend is ready
 
     await transporter.sendMail({
