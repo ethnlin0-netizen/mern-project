@@ -2,9 +2,8 @@ const mongoose = require("mongoose");
 
 const resourceSchema = new mongoose.Schema({
     title: String,
-    type: String,
+    description: String,
     link: String,
-    tags: [String],
     uploadedBy: String,
     classID: String,
 });

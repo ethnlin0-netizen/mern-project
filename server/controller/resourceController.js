@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 
 const createResource = async (req, res) => {
-    const { title, type, link, tags, classID } = req.body;
+    const { title, description, link, classID } = req.body;
     const userId = req.user.userId.toString();
 
     try {
@@ -22,9 +22,8 @@ const createResource = async (req, res) => {
 
         const newResource = new Resource({
             title,
-            type,
+            description,
             link,
-            tags,
             uploadedBy,
             classID,
         });
@@ -36,16 +35,6 @@ const createResource = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-/*
-const getResourcesByClass = async (req, res) => {
-    try {
-        const resources = await Resource.find({ classID: req.params.classID });
-        res.status(200).json(resources);
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
-*/
 
 const getResourcesByClass = async (req, res) => {
     const userId = req.user.userId.toString();
