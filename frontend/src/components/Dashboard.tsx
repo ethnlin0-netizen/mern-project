@@ -12,21 +12,19 @@ function Dashboard() {
   const [joinResult, setJoinResult] = useState('')
   const [createResult, setCreateResult] = useState('')
   const [myClasses, setMyClasses] = useState<any[]>([])
+  const [filteredClasses, setFilteredClasses] = useState<any[]>([])
   const [messageType, setMessageType] = useState<'success' | 'error'>('success')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Get username from auth
   const username = auth?.username || 'Student'
   const userId = auth?.userId
 
-  // Fetch user's classes on component mount
   useEffect(() => {
     fetchUserClasses()
   }, [])
 
   const fetchUserClasses = async () => {
     if (!userId) return
-  
     try {
       const response = await fetch('http://localhost:5001/api/classes/user/me', {
         headers: { 
@@ -36,6 +34,7 @@ function Dashboard() {
       const data = await response.json()
       if (response.ok) {
         setMyClasses(data)
+        setFilteredClasses(data)
       }
     } catch (error) {
       console.error('Error fetching classes:', error)
@@ -89,13 +88,13 @@ function Dashboard() {
     setIsLoading(true)
     try {
       const response = await fetch('http://localhost:5001/api/classes/join', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth?.token}`
-      },
-      body: JSON.stringify({ joinCode, userId })
-    })
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth?.token}`
+        },
+        body: JSON.stringify({ joinCode, userId })
+      })
       const data = await response.json()
       if (response.ok) {
         setJoinResult(`✓ Successfully joined class "${data.class.className}"`)
@@ -114,28 +113,18 @@ function Dashboard() {
     }
   }
 
-  async function searchClass(event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
+  function searchClass(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault()
     if (!searchText.trim()) {
-      setSearchResult('Please enter a search term')
-      setMessageType('error')
+      setFilteredClasses(myClasses)
+      setSearchResult('')
       return
     }
-    try {
-      const response = await fetch(`http://localhost:5001/api/classes/search?query=${encodeURIComponent(searchText)}`, {
-        headers: { 
-          'Authorization': `Bearer ${auth?.token}` 
-        }
-      })
-      const data = await response.json()
-      if (response.ok) {
-        setSearchResult(`Found ${data.length} classes matching "${searchText}"`)
-        setMessageType('success')
-      }
-    } catch (error) {
-      setSearchResult('Search failed, please try again')
-      setMessageType('error')
-    }
+    const filtered = myClasses.filter(c =>
+      c.className.toLowerCase().includes(searchText.toLowerCase())
+    )
+    setFilteredClasses(filtered)
+    setSearchResult(`Found ${filtered.length} classes matching "${searchText}"`)
   }
 
   const navigateToClass = (classId: string) => {
@@ -145,65 +134,8 @@ function Dashboard() {
   return (
     <div className="container-fluid" style={{ backgroundColor: '#43281c', minHeight: '100vh' }}>
       <div className="container py-4">
-
         <div className="row justify-content-center">
           <div className="col-12 col-lg-10">
-  
-            <div className="card mb-4" style={{ 
-              backgroundColor: '#48392a', 
-              border: '1px solid #000',
-              borderRadius: '12px'
-            }}>
-              <div className="card-body p-4">
-                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Search Classes</h3>
-                <div className="row g-3">
-                  <div className="col-md-8">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Search for classes by name or topic..."
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      style={{
-                        backgroundColor: 'rgba(72, 139, 73, 0.5)',
-                        color: '#fbf2c0',
-                        border: '1px solid #000'
-                      }}
-                    />
-                  </div>
-                  <div className="col-md-4">
-                    <button
-                      type="button"
-                      className="btn w-100"
-                      onClick={searchClass}
-                      disabled={isLoading}
-                      style={{
-                        backgroundColor: 'rgba(67, 40, 28, 0.67)',
-                        color: '#fbf2c0',
-                        border: '1px solid #000',
-                        padding: '10px'
-                      }}
-                    >
-                      Search
-                    </button>
-                  </div>
-                </div>
-                {searchResult && (
-                  <div className="mt-3">
-                    <div 
-                      className={`alert ${messageType === 'success' ? 'alert-info' : 'alert-danger'} py-2`}
-                      style={{ 
-                        backgroundColor: messageType === 'success' ? 'rgba(72, 139, 73, 0.3)' : 'rgba(220, 53, 69, 0.8)',
-                        color: '#fbf2c0',
-                        border: 'none'
-                      }}
-                    >
-                      {searchResult}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
 
             <div className="card mb-4" style={{ 
               backgroundColor: '#48392a', 
@@ -261,7 +193,6 @@ function Dashboard() {
               </div>
             </div>
 
- 
             <div className="card mb-4" style={{ 
               backgroundColor: '#48392a', 
               border: '1px solid #000',
@@ -318,6 +249,81 @@ function Dashboard() {
               </div>
             </div>
 
+            <div className="card mb-4" style={{ 
+              backgroundColor: '#48392a', 
+              border: '1px solid #000',
+              borderRadius: '12px'
+            }}>
+              <div className="card-body p-4">
+                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Search Classes</h3>
+                <div className="row g-3">
+                  <div className="col-md-8">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search for classes by name..."
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      style={{
+                        backgroundColor: 'rgba(72, 139, 73, 0.5)',
+                        color: '#fbf2c0',
+                        border: '1px solid #000'
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <div className="d-flex gap-2">
+                      <button
+                        type="button"
+                        className="btn flex-grow-1"
+                        onClick={searchClass}
+                        style={{
+                          backgroundColor: 'rgba(67, 40, 28, 0.67)',
+                          color: '#fbf2c0',
+                          border: '1px solid #000',
+                          padding: '10px'
+                        }}
+                      >
+                        Search
+                      </button>
+                      {searchText && (
+                        <button
+                          type="button"
+                          className="btn"
+                          onClick={() => {
+                            setSearchText('')
+                            setFilteredClasses(myClasses)
+                            setSearchResult('')
+                          }}
+                          style={{
+                            backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                            color: '#fff',
+                            border: '1px solid #000',
+                            padding: '10px'
+                          }}
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {searchResult && (
+                  <div className="mt-3">
+                    <div
+                      className="alert py-2"
+                      style={{ 
+                        backgroundColor: 'rgba(72, 139, 73, 0.3)',
+                        color: '#fbf2c0',
+                        border: 'none'
+                      }}
+                    >
+                      {searchResult}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
 
             <div className="card" style={{ 
               backgroundColor: '#48392a', 
@@ -326,9 +332,9 @@ function Dashboard() {
             }}>
               <div className="card-body p-4">
                 <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Your Classes</h3>
-                {myClasses.length > 0 ? (
+                {filteredClasses.length > 0 ? (
                   <div className="row g-3">
-                    {myClasses.map((classItem) => (
+                    {filteredClasses.map((classItem) => (
                       <div key={classItem._id} className="col-md-6">
                         <div 
                           className="p-3"
@@ -366,6 +372,7 @@ function Dashboard() {
                 )}
               </div>
             </div>
+
           </div>
         </div>
       </div>
