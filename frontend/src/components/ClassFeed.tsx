@@ -7,8 +7,8 @@ interface Resource {
   _id: string
   title: string
   type: string
+  description: string
   link: string
-  tags: string[]
   uploadedBy: string
   classID: string
   createdAt?: string
@@ -27,6 +27,8 @@ function ClassFeed() {
   const [postResultType, setPostResultType] = useState<'success' | 'error'>('success')
   const [searchResult, setSearchResult] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [resourceDescription, setResourceDescription] = useState('')
+
 
   // Fetch resources on component mount
   useEffect(() => {
@@ -78,9 +80,8 @@ function ClassFeed() {
         },
         body: JSON.stringify({
           title: resourceTitle,
-          type: 'link',
+          description: resourceDescription,
           link: resourceLink,
-          tags: [],
           uploadedBy: auth?.username,
           classID: id
         })
@@ -90,6 +91,7 @@ function ClassFeed() {
         setPostResult('✓ Resource posted successfully!')
         setPostResultType('success')
         setResourceTitle('')
+        setResourceDescription('')
         setResourceLink('')
         fetchResources() // Refresh the list
       } else {
@@ -139,7 +141,7 @@ function ClassFeed() {
     
     const filtered = resources.filter(r => 
       r.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      r.tags.some(tag => tag.toLowerCase().includes(searchText.toLowerCase()))
+      r.description?.toLowerCase().includes(searchText.toLowerCase())
     )
     setFilteredResources(filtered)
     setSearchResult(`Found ${filtered.length} resources matching "${searchText}"`)
@@ -264,10 +266,9 @@ function ClassFeed() {
                         key={resource._id}
                         id={resource._id}
                         title={resource.title}
-                        type={resource.type}
+                        description={resource.description}
                         link={resource.link}
                         uploadedBy={resource.uploadedBy}
-                        tags={resource.tags}
                         onDelete={deleteResource}
                         currentUser={auth?.username}
                       />
@@ -293,6 +294,21 @@ function ClassFeed() {
                     placeholder="Resource Title"
                     value={resourceTitle}
                     onChange={(e) => setResourceTitle(e.target.value)}
+                    style={{
+                      backgroundColor: 'rgba(72, 139, 73, 0.5)',
+                      color: '#fbf2c0',
+                      border: '1px solid #000'
+                    }}
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Description (optional)"
+                    value={resourceDescription}
+                    onChange={(e) => setResourceDescription(e.target.value)}
                     style={{
                       backgroundColor: 'rgba(72, 139, 73, 0.5)',
                       color: '#fbf2c0',
