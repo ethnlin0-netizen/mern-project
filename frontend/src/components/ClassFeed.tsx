@@ -127,10 +127,7 @@ function ClassFeed() {
     }
   }
 
-  async function handleFavorite(resourceId: string): Promise<void> {
-    // This would connect to a favorites endpoint when implemented
-    alert(`Added resource ${resourceId} to favorites`)
-  }
+  
 
   function searchResource(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault()
@@ -272,7 +269,6 @@ function ClassFeed() {
                         uploadedBy={resource.uploadedBy}
                         tags={resource.tags}
                         onDelete={deleteResource}
-                        onFavorite={handleFavorite}
                         currentUser={auth?.username}
                       />
                     ))}

@@ -1,15 +1,22 @@
 const Resource = require("../models/Resource");
+const Class = require("../models/Class");
+const User = require("../models/User");
+
 
 const createResource = async (req, res) => {
-    const { title, type, link, tags, uploadedBy, classID } = req.body;
+    const { title, type, link, tags, classID } = req.body;
+    const userId = req.user.userId.toString();
 
     try {
+        const user = await User.findOne({ UserId: req.user.userId });
+        const uploadedBy = user ? user.Login : userId;
+
         const foundClass = await Class.findById(classID);
         if (!foundClass) {
             return res.status(404).json({ message: "Class not found" });
         }
 
-        if(!foundClass.members.includes(req.user.UserId)) {
+        if(!foundClass.members.includes(userId)) {
             return res.status(403).json({ message: "Access denied" });
         }
 
@@ -18,7 +25,7 @@ const createResource = async (req, res) => {
             type,
             link,
             tags,
-            uploadedBy: req.user.UserId,
+            uploadedBy,
             classID,
         });
 
@@ -41,13 +48,14 @@ const getResourcesByClass = async (req, res) => {
 */
 
 const getResourcesByClass = async (req, res) => {
+    const userId = req.user.userId.toString();
     try {
         const foundClass = await Class.findById(req.params.classID);
         if (!foundClass) {
             return res.status(404).json({ message: "Class not found" });
         }
 
-        if(!foundClass.members.includes(req.user.UserId)) {
+        if(!foundClass.members.includes(userId)) {
             return res.status(403).json({ message: "Access denied" });
         }
 
@@ -60,6 +68,8 @@ const getResourcesByClass = async (req, res) => {
 };
 
 const deleteResource = async (req, res) => {
+    const userId = req.user.userId.toString();
+    const user = await User.findOne({ UserId: req.user.userId });
     try {
         const resource = await Resource.findById(req.params.id);
         if (!resource) {
@@ -70,8 +80,8 @@ const deleteResource = async (req, res) => {
         if (!foundClass) {
             return res.status(404).json({ message: "Class not found" });
         }
-        const isCreator = String(resource.uploadedBy) === String(req.user.UserId);
-        const isOwner = String(foundClass.owner) === String(req.user.UserId);
+        const isCreator = resource.uploadedBy === user.Login;
+        const isOwner = String(foundClass.owner) === userId;
 
         if (!isCreator && !isOwner) {
             return res.status(403).json({ message: "Access denied" });

@@ -1,4 +1,4 @@
-function ResourceCard({ id, title, type, link, uploadedBy, tags, onDelete, onFavorite, currentUser }: {
+function ResourceCard({ id, title, type, link, uploadedBy, tags, onDelete, currentUser }: {
   id: string
   title: string
   type: string
@@ -6,13 +6,8 @@ function ResourceCard({ id, title, type, link, uploadedBy, tags, onDelete, onFav
   uploadedBy: string
   tags: string[]
   onDelete: (id: string) => void
-  onFavorite: (id: string) => void
   currentUser?: string | null
 }) {
-  const handleFavorite = (event: React.MouseEvent) => {
-    event.preventDefault()
-    onFavorite(id)
-  }
 
   const handleDelete = (event: React.MouseEvent) => {
     event.preventDefault()
@@ -49,21 +44,7 @@ function ResourceCard({ id, title, type, link, uploadedBy, tags, onDelete, onFav
                 Type: {type} • Uploaded By: {uploadedBy}
               </div>
             </div>
-            <div className="d-flex gap-2">
-              <button 
-                type="button" 
-                onClick={handleFavorite}
-                className="btn btn-sm"
-                style={{
-                  backgroundColor: 'rgba(255, 193, 7, 0.8)',
-                  color: '#000',
-                  border: 'none',
-                  padding: '4px 12px',
-                  fontSize: '0.75rem'
-                }}
-              >
-                ⭐ Favorite
-              </button>
+            <div className="d-flex gap-2">  
               {currentUser === uploadedBy && (
                 <button 
                   type="button" 
