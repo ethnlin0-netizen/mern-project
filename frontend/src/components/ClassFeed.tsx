@@ -189,7 +189,7 @@ function ClassFeed() {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Search by title or tags..."
+                      placeholder="Search by title..."
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
                       style={{
