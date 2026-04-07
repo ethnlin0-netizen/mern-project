@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jsonToken = require("jsonwebtoken");
 const { sendVerificationEmail } = require("../utils/emailService");
+const { sendResetPasswordEmail } = require("../utils/emailService");
 
 
 
@@ -117,9 +118,45 @@ const resendVerificationEmail = async (req, res) => {
     }
 };
 
-const passwordReset = async (req, res) => {};
+const passwordReset = async (req, res) => {
+    try {
+        const user = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
+        if (!user) {
+            return res.status(400).json({ message: "Invalid or expired token" });
+        }
 
-const forgotPassword = async (req, res) => {};
+        const { Password } = req.body;
+        const hashedPassword = await bcrypt.hash(Password, 10);
+        user.Password = hashedPassword;
+        user.resetPasswordToken = null;
+        user.resetPasswordExpires = null;
+        await user.save();
+
+        res.status(200).json({ message: "Password reset successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+const forgotPassword = async (req, res) => {
+    try {
+        const user = await User.findOne({ Email: req.body.Email });
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        const crypto = require("crypto");
+        user.resetPasswordToken = crypto.randomBytes(32).toString("hex");
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        await sendResetPasswordEmail(user.Email, user.resetPasswordToken);
+
+        res.status(200).json({ message: "Password reset email sent successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
 
 
 module.exports = { userRegister, userLogin, emailVerification, resendVerificationEmail, passwordReset, forgotPassword };
