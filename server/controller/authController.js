@@ -108,8 +108,6 @@ const resendVerificationEmail = async (req, res) => {
         user.verificationToken = crypto.randomBytes(32).toString("hex");
         user.verificationTokenExpires = Date.now() + 3600000; // 1 hour
         await user.save();
-
-        // Here we would send the email with the new verification token
         await sendVerificationEmail(user.Email, user.verificationToken);
 
         res.status(200).json({ message: "Verification email resent successfully" });
@@ -137,6 +135,35 @@ const passwordReset = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+/*const passwordReset = async (req, res) => {
+    try {
+        console.log("TOKEN:", req.params.token);
+        console.log("BODY:", req.body);
+        
+        const user = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
+        console.log("USER FOUND:", user);
+        
+        if (!user) {
+            return res.status(400).json({ message: "Invalid or expired token" });
+        }
+
+        const { Password } = req.body;
+        console.log("NEW PASSWORD:", Password);
+        
+        const hashedPassword = await bcrypt.hash(Password, 10);
+        user.Password = hashedPassword;
+        user.resetPasswordToken = null;
+        user.resetPasswordExpires = null;
+        await user.save();
+        console.log("SAVED USER:", user);
+
+        res.status(200).json({ message: "Password reset successfully" });
+    } catch (error) {
+        console.log("RESET ERROR:", error.message);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};*/
 
 const forgotPassword = async (req, res) => {
     try {

@@ -6,7 +6,6 @@ import ResourceCard from './ResourceCard.tsx'
 interface Resource {
   _id: string
   title: string
-  type: string
   description: string
   link: string
   uploadedBy: string
@@ -28,6 +27,7 @@ function ClassFeed() {
   const [searchResult, setSearchResult] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [resourceDescription, setResourceDescription] = useState('')
+  const [classFeedName, setClassFeedName] = useState('')
 
 
   // Fetch resources on component mount
@@ -49,6 +49,13 @@ function ClassFeed() {
       } else {
         setPostResult(data.message || 'Error loading resources')
         setPostResultType('error')
+      }
+      const classResponse = await fetch(`http://localhost:5001/api/classes/${id}`, {
+        headers: { 'Authorization': `Bearer ${auth?.token}` }
+      })
+      const classData = await classResponse.json()
+      if (classResponse.ok) {
+        setClassFeedName(classData.className)
       }
     } catch (error) {
       setPostResult('Error loading resources')
@@ -169,9 +176,13 @@ function ClassFeed() {
               padding: '8px 20px'
             }}
           >
-            ← Back to Dashboard
+            Back to Dashboard
           </button>
         </div>
+
+        {classFeedName && (
+            <h2 className="mb-4" style={{ color: '#fbf2c0' }}>{classFeedName}</h2>
+        )}
 
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
