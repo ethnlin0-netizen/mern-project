@@ -1,4 +1,5 @@
 const Class = require("../models/Class");
+const Resource = require("../models/Resource");
 
 const createClass = async (req, res) => {
     const { className } = req.body;
@@ -73,4 +74,50 @@ const searchClasses = async (req, res) => {
     }
 };
 
-module.exports = { createClass, joinClass, getClass, getMyClasses, searchClasses };
+const leaveClass = async (req, res) => {
+    const userId = req.user.userId.toString();
+    try {
+        const foundClass = await Class.findById(req.params.id);
+        if (!foundClass) {
+            return res.status(404).json({ message: "Class not found" });
+        }
+
+        if (foundClass.owner === userId) {
+            return res.status(400).json({ message: "You are the owner. Delete the class instead." });
+        }
+
+        if (!foundClass.members.includes(userId)) {
+            return res.status(400).json({ message: "You are not a member of this class" });
+        }
+
+        foundClass.members = foundClass.members.filter(member => member !== userId);
+        await foundClass.save();
+
+        res.status(200).json({ message: "Left class successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+const deleteClass = async (req, res) => {
+    const userId = req.user.userId.toString();
+    try {
+        const foundClass = await Class.findById(req.params.id);
+        if (!foundClass) {
+            return res.status(404).json({ message: "Class not found" });
+        }
+
+        if (foundClass.owner !== userId) {
+            return res.status(403).json({ message: "Only the owner can delete this class" });
+        }
+
+        await Resource.deleteMany({ classID: req.params.id });
+        await Class.findByIdAndDelete(req.params.id);
+
+        res.status(200).json({ message: "Class deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+module.exports = { createClass, joinClass, getClass, getMyClasses, searchClasses, leaveClass, deleteClass };

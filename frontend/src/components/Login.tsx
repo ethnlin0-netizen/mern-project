@@ -19,7 +19,8 @@ function Login() {
       })
       const data = await response.json()
       if (response.ok) {
-        auth?.login(data.token, data.token, login)
+        const payload = JSON.parse(atob(data.token.split('.')[1]))
+        auth?.login(data.token, payload.userId.toString(), login)
         navigate('/dashboard')
       } else {
         setMessage(data.message)

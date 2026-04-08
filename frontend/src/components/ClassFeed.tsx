@@ -28,6 +28,7 @@ function ClassFeed() {
   const [isLoading, setIsLoading] = useState(false)
   const [resourceDescription, setResourceDescription] = useState('')
   const [classFeedName, setClassFeedName] = useState('')
+  const [isOwner, setIsOwner] = useState(false)
 
 
   // Fetch resources on component mount
@@ -56,6 +57,10 @@ function ClassFeed() {
       const classData = await classResponse.json()
       if (classResponse.ok) {
         setClassFeedName(classData.className)
+        console.log("Class owner:", classData.owner)
+        console.log("Auth userId:", auth?.userId)
+        console.log("Match:", classData.owner === auth?.userId?.toString())
+        setIsOwner(classData.owner === auth?.userId?.toString())
       }
     } catch (error) {
       setPostResult('Error loading resources')
@@ -123,7 +128,7 @@ function ClassFeed() {
       })
       const data = await response.json()
       if (response.ok) {
-        setPostResult('✓ Resource deleted successfully!')
+        setPostResult('Resource deleted successfully!')
         setPostResultType('success')
         fetchResources() // Refresh the list
       } else {
@@ -160,6 +165,46 @@ function ClassFeed() {
     setSearchResult('')
   }
 
+  async function leaveClass(): Promise<void> {
+    if (!window.confirm('Are you sure you want to leave this class?')) return
+    try {
+        const response = await fetch(`http://localhost:5001/api/classes/leave/${id}`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${auth?.token}` }
+        })
+        const data = await response.json()
+        if (response.ok) {
+            navigate('/dashboard')
+        } else {
+            setPostResult(data.message)
+            setPostResultType('error')
+        }
+    } catch (error) {
+        setPostResult('Server error, please try again')
+        setPostResultType('error')
+    }
+  }
+
+  async function deleteClass(): Promise<void> {
+      if (!window.confirm('Are you sure you want to delete this class forever?')) return
+      try {
+          const response = await fetch(`http://localhost:5001/api/classes/delete/${id}`, {
+              method: 'DELETE',
+              headers: { 'Authorization': `Bearer ${auth?.token}` }
+          })
+          const data = await response.json()
+          if (response.ok) {
+              navigate('/dashboard')
+          } else {
+              setPostResult(data.message)
+              setPostResultType('error')
+          }
+      } catch (error) {
+          setPostResult('Server error, please try again')
+          setPostResultType('error')
+      }
+  }
+
   return (
     <div className="container-fluid" style={{ backgroundColor: '#43281c', minHeight: '100vh' }}>
       <div className="container py-4">
@@ -178,7 +223,34 @@ function ClassFeed() {
           >
             Back to Dashboard
           </button>
-        </div>
+          {isOwner ? (
+            <button
+                onClick={deleteClass}
+                className="btn"
+                style={{
+                    backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                    color: '#fff',
+                    border: '1px solid #000',
+                    padding: '8px 20px'
+                }}
+            >
+                Delete Class
+            </button>
+        ) : (
+            <button
+                onClick={leaveClass}
+                className="btn"
+                style={{
+                    backgroundColor: 'rgba(67, 40, 28, 0.67)',
+                    color: '#fbf2c0',
+                    border: '1px solid #000',
+                    padding: '8px 20px'
+                }}
+            >
+                Leave Class
+            </button>
+          )}
+      </div>
 
         {classFeedName && (
             <h2 className="mb-4" style={{ color: '#fbf2c0' }}>{classFeedName}</h2>
