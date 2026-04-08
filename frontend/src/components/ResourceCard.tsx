@@ -22,7 +22,7 @@ function ResourceCard({ id, title, description, link, uploadedBy, onDelete, curr
     }}>
       <div className="d-flex align-items-start">
         <div style={{ fontSize: '2rem', marginRight: '15px' }}>
-          🔗
+          
         </div>
         <div className="flex-grow-1">
           <div className="d-flex justify-content-between align-items-start">
