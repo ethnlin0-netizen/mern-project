@@ -38,7 +38,7 @@ function ClassFeed() {
 
   const fetchResources = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/resources/class/${id}`, {
+      const response = await fetch(`https://groupstudyhub.xyz/api/resources/class/${id}`, {
         headers: {
           'Authorization': `Bearer ${auth?.token}`
         }
@@ -51,7 +51,7 @@ function ClassFeed() {
         setPostResult(data.message || 'Error loading resources')
         setPostResultType('error')
       }
-      const classResponse = await fetch(`http://localhost:5001/api/classes/${id}`, {
+      const classResponse = await fetch(`https://groupstudyhub.xyz/api/classes/${id}`, {
         headers: { 'Authorization': `Bearer ${auth?.token}` }
       })
       const classData = await classResponse.json()
@@ -84,7 +84,7 @@ function ClassFeed() {
     
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:5001/api/resources/', {
+      const response = await fetch('https://groupstudyhub.xyz/api/resources/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ function ClassFeed() {
 
   async function deleteResource(resourceId: string): Promise<void> {
     try {
-      const response = await fetch(`http://localhost:5001/api/resources/${resourceId}`, {
+      const response = await fetch(`https://groupstudyhub.xyz/api/resources/${resourceId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${auth?.token}`
@@ -168,7 +168,7 @@ function ClassFeed() {
   async function leaveClass(): Promise<void> {
     if (!window.confirm('Are you sure you want to leave this class?')) return
     try {
-        const response = await fetch(`http://localhost:5001/api/classes/leave/${id}`, {
+        const response = await fetch(`https://groupstudyhub.xyz/api/classes/leave/${id}`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${auth?.token}` }
         })
@@ -188,7 +188,7 @@ function ClassFeed() {
   async function deleteClass(): Promise<void> {
       if (!window.confirm('Are you sure you want to delete this class forever?')) return
       try {
-          const response = await fetch(`http://localhost:5001/api/classes/delete/${id}`, {
+          const response = await fetch(`https://groupstudyhub.xyz/api/classes/delete/${id}`, {
               method: 'DELETE',
               headers: { 'Authorization': `Bearer ${auth?.token}` }
           })

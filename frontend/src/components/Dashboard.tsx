@@ -24,7 +24,7 @@ function Dashboard() {
   const fetchUserClasses = async () => {
     if (!userId) return
     try {
-      const response = await fetch('http://localhost:5001/api/classes/user/me', {
+      const response = await fetch('https://groupstudyhub.xyz/api/classes/user/me', {
         headers: { 
           'Authorization': `Bearer ${auth?.token}` 
         }
@@ -48,7 +48,7 @@ function Dashboard() {
     
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:5001/api/classes/create', {
+      const response = await fetch('https://groupstudyhub.xyz/api/classes/create', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ function Dashboard() {
     
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:5001/api/classes/join', {
+      const response = await fetch('https://groupstudyhub.xyz/api/classes/join', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

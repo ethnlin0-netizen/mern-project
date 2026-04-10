@@ -14,7 +14,7 @@ function VerifyEmail() {
     if (hasFetched.current) return
     hasFetched.current = true
 
-    fetch(`http://localhost:5001/api/auth/verify-email/${token}`)
+    fetch(`https://groupstudyhub.xyz/api/auth/verify-email/${token}`)
       .then(res => res.json())
       .then(data => {
         setMessage(data.message)
@@ -31,7 +31,7 @@ function VerifyEmail() {
       setResendMessage('Please enter your email')
       return
     }
-    fetch('http://localhost:5001/api/auth/resend-verification', {
+    fetch('https://groupstudyhub.xyz/api/auth/resend-verification', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ Email: email })

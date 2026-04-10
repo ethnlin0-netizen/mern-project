@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendVerificationEmail = async (email, token) => {
-    const verificationLink = `http://localhost:5173/verify-email/${token}?email=${email}`;
+    const verificationLink = `https://groupstudyhub.xyz/verify-email/${token}?email=${email}`;
     //backend link should be replaced with frontend link when frontend is ready
 
     await transporter.sendMail({
@@ -26,7 +26,7 @@ const sendVerificationEmail = async (email, token) => {
 };
 
 const sendResetPasswordEmail = async (email, token) => {
-    const resetLink = `http://localhost:5173/reset-password/${token}`;
+    const resetLink = `https://groupstudyhub.xyz/reset-password/${token}`;
     //backend link should be replaced with frontend link when frontend is ready
 
     await transporter.sendMail({
