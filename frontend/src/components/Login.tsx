@@ -12,7 +12,7 @@ function Login() {
   async function handleSubmit(event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
     event.preventDefault()
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch('https://groupstudyhub.xyz/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ Login: login, Password: password })
