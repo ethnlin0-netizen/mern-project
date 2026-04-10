@@ -13,10 +13,8 @@ function Dashboard() {
   const [createResult, setCreateResult] = useState('')
   const [myClasses, setMyClasses] = useState<any[]>([])
   const [filteredClasses, setFilteredClasses] = useState<any[]>([])
-  const [messageType, setMessageType] = useState<'success' | 'error'>('success')
   const [isLoading, setIsLoading] = useState(false)
 
-  const username = auth?.username || 'Student'
   const userId = auth?.userId
 
   useEffect(() => {
@@ -45,7 +43,6 @@ function Dashboard() {
     event.preventDefault()
     if (!className.trim()) {
       setCreateResult('Please enter a class name')
-      setMessageType('error')
       return
     }
     
@@ -62,16 +59,13 @@ function Dashboard() {
       const data = await response.json()
       if (response.ok) {
         setCreateResult(`✓ Created class "${data.class.className}". Join code: ${data.class.joinCode}`)
-        setMessageType('success')
         setClassName('')
         fetchUserClasses()
       } else {
         setCreateResult(data.message)
-        setMessageType('error')
       }
     } catch (error) {
       setCreateResult('Server error, please try again')
-      setMessageType('error')
     } finally {
       setIsLoading(false)
     }
@@ -81,7 +75,6 @@ function Dashboard() {
     event.preventDefault()
     if (!joinCode.trim()) {
       setJoinResult('Please enter a join code')
-      setMessageType('error')
       return
     }
     
@@ -98,16 +91,13 @@ function Dashboard() {
       const data = await response.json()
       if (response.ok) {
         setJoinResult(`✓ Successfully joined class "${data.class.className}"`)
-        setMessageType('success')
         setJoinCode('')
         fetchUserClasses()
       } else {
         setJoinResult(data.message)
-        setMessageType('error')
       }
     } catch (error) {
       setJoinResult('Server error, please try again')
-      setMessageType('error')
     } finally {
       setIsLoading(false)
     }
