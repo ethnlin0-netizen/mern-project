@@ -144,7 +144,7 @@ function ResetPassword() {
 
                 <div className="text-center mt-3">
                   <a href="/login" className="text-decoration-none" style={{ color: '#fbf2c0', fontSize: '0.85rem' }}>
-                    ← Return to login page
+                    Return to login page
                   </a>
                 </div>
               </div>

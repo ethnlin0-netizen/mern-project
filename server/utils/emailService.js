@@ -1,45 +1,36 @@
-const nodemailer = require("nodemailer");
-
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const sendVerificationEmail = async (email, token) => {
-    const verificationLink = `https://groupstudyhub.xyz/verify-email/${token}?email=${email}`;
-    //backend link should be replaced with frontend link when frontend is ready
+    const verificationLink = `https://groupstudyhub.xyz/verify-email/${token}?email=${email}`
 
-    await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+    await sgMail.send({
         to: email,
-        subject: "Verify Your Email",
+        from: 'your_verified_sender@email.com',
+        subject: 'Verify Your Email',
         html: `
             <h2>Welcome</h2>
             <p>Click the link below to verify your email:</p>
             <a href="${verificationLink}">${verificationLink}</a>
-            <p>This link expires in 24 hours.</p>
-        `,
-    });
-};
+            <p>This link expires in 1 hour.</p>
+        `
+    })
+}
 
 const sendResetPasswordEmail = async (email, token) => {
-    const resetLink = `https://groupstudyhub.xyz/reset-password/${token}`;
-    //backend link should be replaced with frontend link when frontend is ready
+    const resetLink = `https://groupstudyhub.xyz/reset-password/${token}`
 
-    await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+    await sgMail.send({
         to: email,
-        subject: "Reset Your Password",
+        from: 'your_verified_sender@email.com',
+        subject: 'Reset Your Password',
         html: `
             <h2>Password Reset Request</h2>
             <p>Click the link below to reset your password:</p>
             <a href="${resetLink}">${resetLink}</a>
             <p>This link expires in 1 hour.</p>
-        `,
-    });
+        `
+    })
 }
 
-module.exports = { sendVerificationEmail, sendResetPasswordEmail };
+module.exports = { sendVerificationEmail, sendResetPasswordEmail }
