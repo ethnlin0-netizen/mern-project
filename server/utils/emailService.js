@@ -6,7 +6,7 @@ const sendVerificationEmail = async (email, token) => {
 
     await sgMail.send({
         to: email,
-        from: 'your_verified_sender@email.com',
+        from: 'ethnlin0@gmail.com',
         subject: 'Verify Your Email',
         html: `
             <h2>Welcome</h2>
@@ -22,7 +22,7 @@ const sendResetPasswordEmail = async (email, token) => {
 
     await sgMail.send({
         to: email,
-        from: 'your_verified_sender@email.com',
+        from: 'ethnlin0@gmail.com',
         subject: 'Reset Your Password',
         html: `
             <h2>Password Reset Request</h2>
