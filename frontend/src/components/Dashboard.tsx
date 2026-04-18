@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext.tsx'
 import { useNavigate } from 'react-router-dom'
-const [activeTab, setActiveTab] = useState<'classes' | 'manage' | 'settings'>('classes')
 
 function Dashboard() {
   const auth = useAuth()
@@ -15,6 +14,8 @@ function Dashboard() {
   const [myClasses, setMyClasses] = useState<any[]>([])
   const [filteredClasses, setFilteredClasses] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState<'classes' | 'manage' | 'settings'>('classes')
+
 
   const userId = auth?.userId
 
