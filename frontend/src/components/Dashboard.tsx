@@ -474,6 +474,12 @@ function Dashboard() {
                     <p style={{ color: '#fbf2c0', opacity: 0.7, marginBottom: '4px', fontSize: '0.85rem' }}>Logged in as</p>
                     <p style={{ color: '#fbf2c0', fontWeight: 600, fontSize: '1.1rem' }}>{auth?.username}</p>
                   </div>
+                  <div className="mb-3">
+                    <p style={{ color: '#fbf2c0', opacity: 0.7, marginBottom: '4px', fontSize: '0.85rem' }}>Member since</p>
+                    <p style={{ color: '#fbf2c0', fontWeight: 600 }}>
+                      {new Date(auth?.userId ? parseInt(auth.userId) : 0).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+                    </p>
+                  </div>
                   <button
                     type="button"
                     className="btn"
