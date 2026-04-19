@@ -206,247 +206,282 @@ function ClassFeed() {
   }
 
   return (
-    <div className="container-fluid" style={{ backgroundColor: '#43281c', minHeight: '100vh' }}>
-      <div className="container py-4">
-        
-        
-        <div className="mb-4">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="btn"
-            style={{
-              backgroundColor: 'rgba(67, 40, 28, 0.67)',
-              color: '#fbf2c0',
-              border: '1px solid #000',
-              padding: '8px 20px'
-            }}
-          >
-            Back to Dashboard
-          </button>
-          {isOwner ? (
-            <button
-                onClick={deleteClass}
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
+      <div style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundImage: 'url(/background.webp)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        filter: 'blur(4px)',
+        zIndex: 0
+      }} />
+      <div style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        zIndex: 1
+      }} />
+      <div className="container-fluid" style={{ position: 'relative', zIndex: 2, minHeight: '100vh' }}>
+        <div className="container py-4">
+          <h1 className="text-center mb-4" style={{ 
+            color: '#fbf2c0', 
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 600,
+            textShadow: '0 2px 8px rgba(0,0,0,0.5)'
+          }}>
+            Group Study Hub
+          </h1>
+          <div className="mb-4">
+            <div className="d-flex gap-2 align-items-center justify-content-center mb-2">
+              <button
+                onClick={() => navigate('/dashboard')}
                 className="btn"
                 style={{
+                  backgroundColor: 'rgba(67, 40, 28, 0.67)',
+                  color: '#fbf2c0',
+                  border: '1px solid #000',
+                  padding: '8px 20px'
+                }}
+              >
+                Back to Dashboard
+              </button>
+
+              {isOwner ? (
+                <button
+                  onClick={deleteClass}
+                  className="btn"
+                  style={{
                     backgroundColor: 'rgba(220, 53, 69, 0.8)',
                     color: '#fff',
                     border: '1px solid #000',
                     padding: '8px 20px'
-                }}
-            >
-                Delete Class
-            </button>
-        ) : (
-            <button
-                onClick={leaveClass}
-                className="btn"
-                style={{
+                  }}
+                >
+                  🗑️ Delete Class
+                </button>
+              ) : (
+                <button
+                  onClick={leaveClass}
+                  className="btn"
+                  style={{
                     backgroundColor: 'rgba(67, 40, 28, 0.67)',
                     color: '#fbf2c0',
                     border: '1px solid #000',
                     padding: '8px 20px'
-                }}
-            >
-                Leave Class
-            </button>
-          )}
-      </div>
+                  }}
+                >
+                  Leave Class
+                </button>
+              )}
+            </div>
 
-        {classFeedName && (
-            <h2 className="mb-4" style={{ color: '#fbf2c0' }}>{classFeedName}</h2>
-        )}
+            {classFeedName && (
+              <h2 className="text-center" style={{ 
+                color: '#fbf2c0', 
+                fontFamily: 'Poppins, sans-serif',
+                textShadow: '0 2px 8px rgba(0,0,0,0.5)'
+              }}>
+                {classFeedName}
+              </h2>
+            )}
+          </div>
 
-        <div className="row justify-content-center">
-          <div className="col-12 col-lg-8">
+          <div className="row justify-content-center">
+            <div className="col-12 col-lg-8">
 
-            
-            <div className="card mb-4" style={{ 
-              backgroundColor: '#48392a', 
-              border: '1px solid #000',
-              borderRadius: '12px'
-            }}>
-              <div className="card-body p-4">
-                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Search Resources</h3>
-                <div className="row g-3">
-                  <div className="col-md-8">
+              <div className="card mb-4" style={{ 
+                backgroundColor: 'rgba(72, 57, 42, 0.85)', 
+                border: '1px solid #000',
+                borderRadius: '12px',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+              }}>
+                <div className="card-body p-4">
+                  <h3 className="mb-3" style={{ color: '#fbf2c0', fontFamily: 'Poppins, sans-serif' }}>
+                    <i className="bi bi-search me-2"></i>Search Resources
+                  </h3>
+                  <div className="row g-3">
+                    <div className="col-md-8">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search by title or description..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          color: '#fbf2c0',
+                          border: '1px solid #000'
+                        }}
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <div className="d-flex gap-2">
+                        <button
+                          type="button"
+                          className="btn flex-grow-1"
+                          onClick={searchResource}
+                          style={{
+                            backgroundColor: 'rgba(67, 40, 28, 0.67)',
+                            color: '#fbf2c0',
+                            border: '1px solid #000',
+                            padding: '10px'
+                          }}
+                        >
+                          Search
+                        </button>
+                        {searchText && (
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={clearSearch}
+                            style={{
+                              backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                              color: '#fff',
+                              border: '1px solid #000',
+                              padding: '10px'
+                            }}
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {searchResult && (
+                    <div className="mt-3">
+                      <div className="alert py-2" style={{ 
+                        backgroundColor: 'rgba(72, 139, 73, 0.3)', 
+                        color: '#fbf2c0', 
+                        border: 'none' 
+                      }}>
+                        {searchResult}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="card mb-4" style={{ 
+                backgroundColor: 'rgba(72, 57, 42, 0.85)', 
+                border: '1px solid #000',
+                borderRadius: '12px',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+              }}>
+                <div className="card-body p-4">
+                  <h3 className="mb-3" style={{ color: '#fbf2c0', fontFamily: 'Poppins, sans-serif' }}>
+                    <i className="bi bi-collection me-2"></i>Class Resources
+                  </h3>
+                  {filteredResources.length === 0 ? (
+                    <div className="text-center py-4">
+                      <i className="bi bi-journal-x" style={{ fontSize: '3rem', color: '#fbf2c0', opacity: 0.4 }}></i>
+                      <p style={{ color: '#fbf2c0', opacity: 0.7, marginTop: '12px' }}>
+                        No resources yet. Be the first to share something!
+                      </p>
+                    </div>
+                  ) : (
+                    <div id="resourceList">
+                      {filteredResources.map((resource) => (
+                        <ResourceCard
+                          key={resource._id}
+                          id={resource._id}
+                          title={resource.title}
+                          description={resource.description}
+                          link={resource.link}
+                          uploadedBy={resource.uploadedBy}
+                          onDelete={deleteResource}
+                          currentUser={auth?.username}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="card" style={{ 
+                backgroundColor: 'rgba(72, 57, 42, 0.85)', 
+                border: '1px solid #000',
+                borderRadius: '12px',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+              }}>
+                <div className="card-body p-4">
+                  <h3 className="mb-3" style={{ color: '#fbf2c0', fontFamily: 'Poppins, sans-serif' }}>
+                    <i className="bi bi-plus-circle me-2"></i>Share a Resource
+                  </h3>
+                  <div className="mb-3">
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Search by title..."
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
+                      placeholder="Resource Title"
+                      value={resourceTitle}
+                      onChange={(e) => setResourceTitle(e.target.value)}
                       style={{
-                        backgroundColor: 'rgba(72, 139, 73, 0.5)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
                         color: '#fbf2c0',
                         border: '1px solid #000'
                       }}
                     />
                   </div>
-                  <div className="col-md-4">
-                    <div className="d-flex gap-2">
-                      <button
-                        type="button"
-                        className="btn flex-grow-1"
-                        onClick={searchResource}
-                        style={{
-                          backgroundColor: 'rgba(67, 40, 28, 0.67)',
-                          color: '#fbf2c0',
-                          border: '1px solid #000',
-                          padding: '10px'
+                  <div className="mb-3">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Description (optional)"
+                      value={resourceDescription}
+                      onChange={(e) => setResourceDescription(e.target.value)}
+                      style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        color: '#fbf2c0',
+                        border: '1px solid #000'
+                      }}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <input
+                      type="url"
+                      className="form-control"
+                      placeholder="Resource Link (URL)"
+                      value={resourceLink}
+                      onChange={(e) => setResourceLink(e.target.value)}
+                      style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        color: '#fbf2c0',
+                        border: '1px solid #000'
+                      }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn w-100"
+                    onClick={postResource}
+                    disabled={isLoading}
+                    style={{
+                      backgroundColor: 'rgba(67, 40, 28, 0.67)',
+                      color: '#fbf2c0',
+                      border: '1px solid #000',
+                      padding: '10px'
+                    }}
+                  >
+                    {isLoading ? 'Posting...' : 'Post Resource'}
+                  </button>
+                  {postResult && (
+                    <div className="mt-3">
+                      <div
+                        className={`alert ${postResultType === 'success' ? 'alert-success' : 'alert-danger'} py-2`}
+                        style={{ 
+                          backgroundColor: postResultType === 'success' ? 'rgba(40, 167, 69, 0.8)' : 'rgba(220, 53, 69, 0.8)',
+                          color: '#fff',
+                          border: 'none'
                         }}
                       >
-                        Search
-                      </button>
-                      {searchText && (
-                        <button
-                          type="button"
-                          className="btn"
-                          onClick={clearSearch}
-                          style={{
-                            backgroundColor: 'rgba(220, 53, 69, 0.8)',
-                            color: '#fff',
-                            border: '1px solid #000',
-                            padding: '10px'
-                          }}
-                        >
-                          Clear
-                        </button>
-                      )}
+                        {postResult}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-                {searchResult && (
-                  <div className="mt-3">
-                    <div className="alert alert-info py-2" style={{ 
-                      backgroundColor: 'rgba(72, 139, 73, 0.3)', 
-                      color: '#fbf2c0', 
-                      border: 'none' 
-                    }}>
-                      {searchResult}
-                    </div>
-                  </div>
-                )}
               </div>
+
             </div>
-
-            
-            <div className="card mb-4" style={{ 
-              backgroundColor: '#48392a', 
-              border: '1px solid #000',
-              borderRadius: '12px'
-            }}>
-              <div className="card-body p-4">
-                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Class Resources</h3>
-                
-                {filteredResources.length === 0 ? (
-                  <p style={{ color: '#fbf2c0', opacity: 0.7 }}>
-                    No resources yet. Be the first to share something!
-                  </p>
-                ) : (
-                  <div id="resourceList">
-                    {filteredResources.map((resource) => (
-                      <ResourceCard
-                        key={resource._id}
-                        id={resource._id}
-                        title={resource.title}
-                        description={resource.description}
-                        link={resource.link}
-                        uploadedBy={resource.uploadedBy}
-                        onDelete={deleteResource}
-                        currentUser={auth?.username}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            
-            <div className="card" style={{ 
-              backgroundColor: '#48392a', 
-              border: '1px solid #000',
-              borderRadius: '12px'
-            }}>
-              <div className="card-body p-4">
-                <h3 className="mb-3" style={{ color: '#fbf2c0' }}>Share a Resource</h3>
-                
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Resource Title"
-                    value={resourceTitle}
-                    onChange={(e) => setResourceTitle(e.target.value)}
-                    style={{
-                      backgroundColor: 'rgba(72, 139, 73, 0.5)',
-                      color: '#fbf2c0',
-                      border: '1px solid #000'
-                    }}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Description (optional)"
-                    value={resourceDescription}
-                    onChange={(e) => setResourceDescription(e.target.value)}
-                    style={{
-                      backgroundColor: 'rgba(72, 139, 73, 0.5)',
-                      color: '#fbf2c0',
-                      border: '1px solid #000'
-                    }}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <input
-                    type="url"
-                    className="form-control"
-                    placeholder="Resource Link (URL)"
-                    value={resourceLink}
-                    onChange={(e) => setResourceLink(e.target.value)}
-                    style={{
-                      backgroundColor: 'rgba(72, 139, 73, 0.5)',
-                      color: '#fbf2c0',
-                      border: '1px solid #000'
-                    }}
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  className="btn w-100"
-                  onClick={postResource}
-                  disabled={isLoading}
-                  style={{
-                    backgroundColor: 'rgba(67, 40, 28, 0.67)',
-                    color: '#fbf2c0',
-                    border: '1px solid #000',
-                    padding: '10px'
-                  }}
-                >
-                  {isLoading ? 'Posting...' : 'Post Resource'}
-                </button>
-
-                {postResult && (
-                  <div className="mt-3">
-                    <div 
-                      className={`alert ${postResultType === 'success' ? 'alert-success' : 'alert-danger'} py-2`}
-                      style={{ 
-                        backgroundColor: postResultType === 'success' ? 'rgba(40, 167, 69, 0.8)' : 'rgba(220, 53, 69, 0.8)',
-                        color: '#fff',
-                        border: 'none'
-                      }}
-                    >
-                      {postResult}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
           </div>
         </div>
       </div>

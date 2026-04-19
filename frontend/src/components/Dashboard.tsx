@@ -154,7 +154,14 @@ function Dashboard() {
             }}>
               Group Study Hub
             </h1>
-
+            <p className="text-center mb-4" style={{ 
+              color: '#fbf2c0', 
+              opacity: 0.8,
+              fontFamily: 'Poppins, sans-serif',
+              textShadow: '0 1px 4px rgba(0,0,0,0.5)'
+            }}>
+              Welcome, <strong>{auth?.username}</strong>!
+            </p>
             {/* Tabs */}
             <div className="d-flex mb-4 gap-2 justify-content-center">
               <button
