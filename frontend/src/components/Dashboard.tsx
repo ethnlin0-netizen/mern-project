@@ -154,7 +154,14 @@ function Dashboard() {
             }}>
               Group Study Hub
             </h1>
-
+            <p className="text-center mb-4" style={{ 
+              color: '#fbf2c0', 
+              opacity: 0.8,
+              fontFamily: 'Poppins, sans-serif',
+              textShadow: '0 1px 4px rgba(0,0,0,0.5)'
+            }}>
+              Welcome, <strong>{auth?.username}</strong>!
+            </p>
             {/* Tabs */}
             <div className="d-flex mb-4 gap-2 justify-content-center">
               <button
@@ -473,6 +480,12 @@ function Dashboard() {
                   <div className="mb-3">
                     <p style={{ color: '#fbf2c0', opacity: 0.7, marginBottom: '4px', fontSize: '0.85rem' }}>Logged in as</p>
                     <p style={{ color: '#fbf2c0', fontWeight: 600, fontSize: '1.1rem' }}>{auth?.username}</p>
+                  </div>
+                  <div className="mb-3">
+                    <p style={{ color: '#fbf2c0', opacity: 0.7, marginBottom: '4px', fontSize: '0.85rem' }}>Member since</p>
+                    <p style={{ color: '#fbf2c0', fontWeight: 600 }}>
+                      {new Date(auth?.userId ? parseInt(auth.userId) : 0).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+                    </p>
                   </div>
                   <button
                     type="button"
